@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#081d2b" />
+    <meta name="description" content="Nick's operations portfolio and decision system for turning meetings into owned next actions." />
+    <meta property="og:title" content="Northstar Ops" />
+    <meta property="og:description" content="Decisions into action." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>Northstar Ops | Decisions into action</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="#dashboard" aria-label="Northstar Ops home">
+          <span class="brand-mark" aria-hidden="true">N</span>
+          <span><strong>Northstar</strong><small>Operations portfolio</small></span>
+        </a>
+        <nav>
+          <a class="nav-link active" href="#dashboard" data-view="dashboard"><span>Overview</span><kbd>1</kbd></a>
+          <a class="nav-link" href="#board" data-view="board"><span>Decision board</span><kbd>2</kbd></a>
+          <a class="nav-link" href="#objectives" data-view="objectives"><span>Objectives</span><kbd>3</kbd></a>
+          <a class="nav-link" href="#portfolio" data-view="portfolio"><span>Portfolio</span><kbd>4</kbd></a>
+        </nav>
+        <div class="sidebar-note">
+          <span class="eyebrow">Operating rule</span>
+          <p>Every discussion ends with a decision, evidence owner, or next gate.</p>
+        </div>
+      </aside>
+
+      <main id="main" class="main-content">
+        <header class="topbar">
+          <div><p class="eyebrow">CR / VR operating system</p><h1>Good decisions need a clear next move</h1></div>
+          <div class="topbar-actions">
+            <span class="sample-flag">Starter data</span>
+            <span class="save-state"><i aria-hidden="true"></i> Saved on this device</span>
+            <button class="button button-quiet" id="dataToolsButton" type="button" aria-expanded="false" aria-controls="dataToolsMenu">Data tools</button>
+            <button class="button button-primary" id="newDecisionButton" type="button">Add decision</button>
+            <div class="menu" id="dataToolsMenu" hidden>
+              <button type="button" id="exportButton">Download backup</button>
+              <label for="importInput">Restore backup</label>
+              <input id="importInput" type="file" accept="application/json" hidden />
+              <button class="danger-text" type="button" id="resetButton">Reset starter data</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="view active" id="dashboard" data-view-panel="dashboard" aria-labelledby="dashboard-title">
+          <div class="section-heading">
+            <div><h2 id="dashboard-title">Operations overview</h2><p>A quick read of where the team stands before the next decision meeting.</p></div>
+            <label class="select-wrap">Project<select id="projectFilter" aria-label="Filter dashboard by project"><option value="all">All projects</option></select></label>
+          </div>
+          <div class="metric-strip" aria-label="Operations metrics">
+            <article class="metric"><span>Decision coverage</span><strong id="metricCoverage">0%</strong><small id="metricCoverageNote">Agenda areas with a recorded decision</small></article>
+            <article class="metric"><span>Open evidence</span><strong id="metricEvidence">0</strong><small>Facts still needed</small></article>
+            <article class="metric"><span>Owner coverage</span><strong id="metricOwners">0%</strong><small>Open items with a named owner</small></article>
+            <article class="metric metric-risk"><span>At risk</span><strong id="metricRisk">0</strong><small>Past due or marked blocked</small></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel focus-panel">
+              <div class="panel-heading"><div><span class="eyebrow">Decision health</span><h3>Veteran Ready Operations</h3></div><span class="status status-amber" id="decisionCountBadge">0 decisions needed</span></div>
+              <div class="progress-row"><span>Average workstream readiness</span><strong id="readinessValue">0%</strong></div>
+              <div class="progress-track" id="readinessBar" aria-label="Average workstream readiness"><span style="width:0%"></span></div>
+              <div class="health-bars" id="healthBars" aria-label="Readiness by agenda area"></div>
+            </article>
+            <article class="panel kr-panel">
+              <div class="panel-heading"><div><span class="eyebrow">Next gates</span><h3>What the team must face next</h3></div><span class="score" id="gateCount">0</span></div>
+              <div class="upcoming-gates" id="upcomingGates"></div>
+            </article>
+          </div>
+          <p class="data-caveat">This dashboard uses starter records dated September 2026. Replace them with reviewed team data before using the metrics for a live operating decision.</p>
+        </section>
+
+        <section class="view" id="board" data-view-panel="board" aria-labelledby="board-title">
+          <div class="section-heading">
+            <div><h2 id="board-title">Decision board</h2><p>Every initiative maps to an objective or key result and carries the five fields needed to move.</p></div>
+            <div class="board-actions"><label class="search-wrap"><span class="sr-only">Search decisions</span><input id="boardSearch" type="search" placeholder="Search decisions" /></label><label class="select-wrap">Project<select id="boardProjectFilter"><option value="all">All projects</option></select></label></div>
+          </div>
+          <div class="format-key"><strong>The operating record</strong><span>Decision made</span><span>Remaining evidence</span><span>Owner</span><span>Due date</span><span>Next decision gate</span></div>
+          <div class="board-grid" id="decisionBoard" aria-live="polite"></div>
+        </section>
+
+        <section class="view" id="objectives" data-view-panel="objectives" aria-labelledby="objectives-title">
+          <div class="section-heading"><div><h2 id="objectives-title">Objectives and key results</h2><p>Keep the goal stable. Use key results to measure whether the work is changing the outcome.</p></div><button class="button button-secondary" type="button" id="newObjectiveButton">Add objective</button></div>
+          <div class="okr-intro">
+            <div><span class="eyebrow">Objective</span><strong>The outcome we want to create</strong></div>
+            <div><span class="eyebrow">Key result</span><strong>The measurable proof that we are getting there</strong></div>
+            <div><span class="eyebrow">Initiative</span><strong>The work we choose to move a key result</strong></div>
+          </div>
+          <div class="objective-grid" id="objectiveGrid"></div>
+        </section>
+
+        <section class="view" id="portfolio" data-view-panel="portfolio" aria-labelledby="portfolio-title">
+          <div class="portfolio-hero">
+            <div><p class="eyebrow">Nick's operating portfolio</p><h2 id="portfolio-title">I help teams turn a complicated room into a clear next move</h2><p>These projects show how I frame a decision, organize evidence, assign ownership, and build the next review gate.</p></div>
+            <div class="portfolio-actions"><button class="button button-secondary" id="portfolioModeButton" type="button">Portfolio mode</button><button class="button button-primary" id="newProjectButton" type="button">Add project</button></div>
+          </div>
+          <div class="method-row" aria-label="Nick's operating method">
+            <div><span>01</span><strong>Frame</strong><small>Name the decision</small></div>
+            <div><span>02</span><strong>Prove</strong><small>Find the missing facts</small></div>
+            <div><span>03</span><strong>Own</strong><small>Assign one accountable person</small></div>
+            <div><span>04</span><strong>Gate</strong><small>Set the next decision point</small></div>
+          </div>
+          <div class="portfolio-grid" id="portfolioGrid"></div>
+          <footer class="portfolio-footer"><strong>Northstar Ops</strong><span>Operations leadership, product thinking, and practical execution</span><button class="button button-quiet" id="exitPortfolioMode" type="button" hidden>Exit portfolio mode</button></footer>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="decisionDialog" class="modal">
+      <form id="decisionForm" method="dialog">
+        <div class="modal-heading"><div><p class="eyebrow">Operating record</p><h2 id="decisionDialogTitle">Add decision</h2></div><button class="icon-button" type="button" data-close-dialog="decisionDialog" aria-label="Close">×</button></div>
+        <input id="decisionId" type="hidden" />
+        <div class="form-grid">
+          <label>Title<input id="decisionTitle" required maxlength="100" /></label>
+          <label>Agenda area<select id="decisionAgenda" required></select></label>
+          <label>Project<input id="decisionProject" required maxlength="60" /></label>
+          <label>Objective / key result<input id="decisionOkr" maxlength="100" placeholder="Example: KR2 — Unit cost validated" /></label>
+          <label>Status<select id="decisionStatus"><option value="decision">Needs decision</option><option value="evidence">Evidence open</option><option value="in_progress">In motion</option><option value="done">Closed</option></select></label>
+          <label>Priority<select id="decisionPriority"><option>High</option><option selected>Medium</option><option>Low</option></select></label>
+          <label class="full">Decision made<textarea id="decisionMade" rows="3" placeholder="Write Pending if the team has not decided yet"></textarea></label>
+          <label class="full">Remaining evidence<textarea id="decisionEvidence" rows="4" placeholder="One missing fact per line"></textarea></label>
+          <label>Owner<input id="decisionOwner" maxlength="60" /></label>
+          <label>Due date<input id="decisionDue" type="date" /></label>
+          <label class="full">Next decision gate<input id="decisionGate" maxlength="100" placeholder="The meeting or condition that triggers the next decision" /></label>
+          <label class="full">Readiness <output id="progressOutput">50%</output><input id="decisionProgress" type="range" min="0" max="100" step="5" value="50" /></label>
+        </div>
+        <div class="modal-actions"><button class="button danger-button" id="deleteDecisionButton" type="button" hidden>Delete</button><span></span><button class="button button-quiet" type="button" data-close-dialog="decisionDialog">Cancel</button><button class="button button-primary" type="submit">Save decision</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="projectDialog" class="modal">
+      <form id="projectForm" method="dialog">
+        <div class="modal-heading"><div><p class="eyebrow">Portfolio case study</p><h2>Add project</h2></div><button class="icon-button" type="button" data-close-dialog="projectDialog" aria-label="Close">×</button></div>
+        <div class="form-grid">
+          <label>Project name<input id="projectName" required maxlength="80" /></label>
+          <label>Category<input id="projectCategory" required maxlength="50" placeholder="Operations design" /></label>
+          <label class="full">Business problem<textarea id="projectChallenge" required rows="3"></textarea></label>
+          <label class="full">Operating response<textarea id="projectResponse" required rows="3"></textarea></label>
+          <label>Current gate<input id="projectGate" required maxlength="80" /></label>
+          <label>Evidence / metric<input id="projectMetric" required maxlength="80" /></label>
+        </div>
+        <div class="modal-actions"><span></span><button class="button button-quiet" type="button" data-close-dialog="projectDialog">Cancel</button><button class="button button-primary" type="submit">Add to portfolio</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="objectiveDialog" class="modal">
+      <form id="objectiveForm" method="dialog">
+        <div class="modal-heading"><div><p class="eyebrow">OKR</p><h2>Add objective</h2></div><button class="icon-button" type="button" data-close-dialog="objectiveDialog" aria-label="Close">×</button></div>
+        <div class="form-grid">
+          <label class="full">Objective<input id="objectiveName" required maxlength="100" /></label>
+          <label>Timeframe<input id="objectiveTimeframe" required maxlength="30" placeholder="Q3 2026" /></label>
+          <label>Owner<input id="objectiveOwner" required maxlength="60" /></label>
+          <label class="full">Why it matters<textarea id="objectiveWhy" required rows="3"></textarea></label>
+          <label class="full">Key results<textarea id="objectiveKrs" required rows="5" placeholder="One key result per line"></textarea></label>
+        </div>
+        <div class="modal-actions"><span></span><button class="button button-quiet" type="button" data-close-dialog="objectiveDialog">Cancel</button><button class="button button-primary" type="submit">Add objective</button></div>
+      </form>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="data.js" defer></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
